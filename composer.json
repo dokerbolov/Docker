@@ -1,0 +1,7 @@
+{
+  "require": {
+    "ext-libxml": "*",
+    "ext-dom": "*",
+    "ext-mysqli": "*"
+  }
+}

@@ -1,0 +1,15 @@
+Command: ls, message:  
+Command: crfile docker.txt, message:  
+Command: ls, message:  
+Command: addtext docker.txt, message: 321 
+Command: fileread docker.txt, message:  
+Command: ls, message:  
+Command: deletefile docker.txt, message: Successfully deleted 
+Command: ls, message:  
+Command: exit, message:  
+Command: ls, message:  
+Command: crfile docker.txt, message:  
+Command: addtext docker.txt, message: test 
+Command: ls, message:  
+Command: fileread docker.txt, message:  
+Command: chfiledir docker.txt, message: Successfully deleted 
