@@ -4,16 +4,17 @@
 
     $database = new mysqlConnector();
 
-    function delete($id, $database) {
-        $sql = "DELETE FROM students WHERE id = $id";
-        return $database->execute($sql);
-    }
-
     if(!isset($_SESSION['auth'])) {
         header("Location: index.php");
     }
 
-    $sql = "SELECT * FROM students";
+    $sql = "SELECT 
+                s.id,
+                s.name,
+                s.age,
+                g.name as group_id
+            FROM students as s 
+            LEFT JOIN uni_group as g on s.group_id = g.id";
 
     $result = $database->execute($sql);
 ?>
@@ -31,12 +32,12 @@
     <h1>Hello, <?php echo $_SESSION['username'] ?></h1>
 
     <h3>Students List</h3>
-    <button class="btn btn-success" style="max-width: 200px">Add Student</button>
+    <button class="btn btn-success btn-add" style="max-width: 200px">Add Student</button>
     <table class="table">
         <thead class="thead-dark">
         <th>ID</th>
         <th>Name</th>
-        <th>GROUP_ID</th>
+        <th>GROUP</th>
         <th>AGE</th>
         <th>Action</th>
         </thead>
@@ -49,7 +50,10 @@
                 echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                 echo "<td>" . $row['group_id'] . "</td>";
                 echo "<td>" . htmlspecialchars($row['age']) . "</td>";
-                echo "<td>" . "<a href=''>Удалить</a>" . "</td>";
+                echo "<td>" .
+                    "<button class='btn btn-warning btn-edit' style='margin-right: 10px' data-id='{$row['id']}'>Edit</button>" .
+                    "<button class='btn btn-danger btn-delete' style='margin-left: 10px' data-id='{$row['id']}'>Delete</button>"
+                    . "</td>";
                 echo "</tr>";
             }
         } else {
@@ -62,4 +66,42 @@
 </div>
 </body>
 </html>
+
+<script>
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if(confirm("Are you sure?")) {
+                fetch("add.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "id=" + btn.dataset.id
+                })
+                    .then(window.location.reload())
+            };
+        });
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if(confirm("Are you sure?")) {
+                fetch("delete.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "id=" + btn.dataset.id
+                })
+                    .then(window.location.reload())
+            };
+        });
+    });
+
+    document.querySelectorAll('.btn-add').forEach(btn => {
+        btn.addEventListener('click', () => {
+            window.location.href = "add.php";
+        });
+    });
+</script>
 
