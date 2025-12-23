@@ -10,7 +10,7 @@
 
     $student = '';
 
-    if(!isset($_POST['id'])) {
+    if(isset($_POST['id'])) {
         $id = $_POST['id'];
         $sql = "SELECT * FROM STUDENT WHERE id = $id";
         $student = $database->execute($sql);

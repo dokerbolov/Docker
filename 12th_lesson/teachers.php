@@ -1,22 +1,16 @@
 <?php
-    session_start();
-    include_once "mysqlConnector.php";
+session_start();
+include_once "mysqlConnector.php";
 
-    $database = new mysqlConnector();
+$database = new mysqlConnector();
 
-    if(!isset($_SESSION['auth'])) {
-        header("Location: index.php");
-    }
+if(!isset($_SESSION['auth'])) {
+    header("Location: index.php");
+}
 
-    $sql = "SELECT 
-                s.id,
-                s.name,
-                s.age,
-                g.name as group_id
-            FROM students as s 
-            LEFT JOIN uni_group as g on s.group_id = g.id";
+$sql = "SELECT * FROM teachers";
 
-    $result = $database->execute($sql);
+$result = $database->execute($sql);
 ?>
 
 <!DOCTYPE html>
@@ -39,9 +33,9 @@
     </div>
 
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="main.php" class="nav-link px-2 link-secondary">Students List</a></li>
+        <li><a href="main.php" class="nav-link px-2">Students List</a></li>
         <li><a href="subject.php" class="nav-link px-2">Subject List</a></li>
-        <li><a href="teachers.php" class="nav-link px-2">Teachers List</a></li>
+        <li><a href="teachers.php" class="nav-link px-2 link-secondary">Teachers List</a></li>
     </ul>
 
     <div class="col-md-3 text-end">
@@ -67,14 +61,13 @@
 <div class="card m-5 p-3">
     <h1>Hello, <?php echo $_SESSION['username'] ?></h1>
 
-    <h3>Students List</h3>
-    <button class="btn btn-success btn-add" style="max-width: 200px">Add Student</button>
+    <h3>Teachers List</h3>
+    <button class="btn btn-success btn-add" style="max-width: 200px">Add Teacher</button>
     <table class="table">
         <thead class="thead-dark">
         <th>ID</th>
         <th>Name</th>
-        <th>GROUP</th>
-        <th>AGE</th>
+        <th>Direction</th>
         <th>Action</th>
         </thead>
         <tbody>
@@ -84,8 +77,7 @@
                 echo "<tr>";
                 echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                echo "<td>" . $row['group_id'] . "</td>";
-                echo "<td>" . htmlspecialchars($row['age']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['direction'])  . "</td>";
                 echo "<td>" .
                     "<button class='btn btn-warning btn-edit' style='margin-right: 10px' data-id='{$row['id']}'>Edit</button>" .
                     "<button class='btn btn-danger btn-delete' style='margin-left: 10px' data-id='{$row['id']}'>Delete</button>"
@@ -93,49 +85,10 @@
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='4'>No data</td></tr>";
+            echo "<tr><td colspan='3'>No data</td></tr>";
         } ?>
         </tbody>
     </table>
 </div>
 </body>
 </html>
-
-<script>
-    document.querySelectorAll('.btn-edit').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if(confirm("Are you sure?")) {
-                fetch("add.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "id=" + btn.dataset.id
-                })
-                    .then(window.location.reload())
-            };
-        });
-    });
-
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if(confirm("Are you sure?")) {
-                fetch("delete.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "id=" + btn.dataset.id
-                })
-                    .then(window.location.reload())
-            };
-        });
-    });
-
-    document.querySelectorAll('.btn-add').forEach(btn => {
-        btn.addEventListener('click', () => {
-            window.location.href = "add.php";
-        });
-    });
-</script>
-
