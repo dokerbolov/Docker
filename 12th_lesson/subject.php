@@ -1,22 +1,16 @@
 <?php
-    session_start();
-    include_once "mysqlConnector.php";
+session_start();
+include_once "mysqlConnector.php";
 
-    $database = new mysqlConnector();
+$database = new mysqlConnector();
 
-    if(!isset($_SESSION['auth'])) {
-        header("Location: index.php");
-    }
+if(!isset($_SESSION['auth'])) {
+    header("Location: index.php");
+}
 
-    $sql = "SELECT 
-                s.id,
-                s.name,
-                s.age,
-                g.name as group_id
-            FROM students as s 
-            LEFT JOIN uni_group as g on s.group_id = g.id";
+$sql = "SELECT * FROM subjects";
 
-    $result = $database->execute($sql);
+$result = $database->execute($sql);
 ?>
 
 <!DOCTYPE html>
@@ -39,8 +33,8 @@
     </div>
 
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="main.php" class="nav-link px-2 link-secondary">Students List</a></li>
-        <li><a href="subject.php" class="nav-link px-2">Subject List</a></li>
+        <li><a href="main.php" class="nav-link px-2">Students List</a></li>
+        <li><a href="subject.php" class="nav-link px-2 link-secondary">Subject List</a></li>
         <li><a href="teachers.php" class="nav-link px-2">Teachers List</a></li>
     </ul>
 
@@ -100,42 +94,3 @@
 </div>
 </body>
 </html>
-
-<script>
-    document.querySelectorAll('.btn-edit').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if(confirm("Are you sure?")) {
-                fetch("add.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "id=" + btn.dataset.id
-                })
-                    .then(window.location.reload())
-            };
-        });
-    });
-
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if(confirm("Are you sure?")) {
-                fetch("delete.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "id=" + btn.dataset.id
-                })
-                    .then(window.location.reload())
-            };
-        });
-    });
-
-    document.querySelectorAll('.btn-add').forEach(btn => {
-        btn.addEventListener('click', () => {
-            window.location.href = "add.php";
-        });
-    });
-</script>
-
