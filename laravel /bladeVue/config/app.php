@@ -52,7 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://docker-academy'),
+    'url_main' => env('APP_URL_MAIN', 'http://docker-academy'),
+    'url_test' => env('APP_URL_TEST', 'http://test-docker'),
 
     /*
     |--------------------------------------------------------------------------
